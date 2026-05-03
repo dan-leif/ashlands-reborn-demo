@@ -474,28 +474,31 @@ function loadScene(idx) {
   current = idx;
   const s = scenes[idx];
   updateFrameWidth();
-
-  phBeforeLabel.textContent = s.before;
-  imgBefore.style.display = 'none';
-  phBefore.style.display = 'flex';
-  const b = new Image();
-  b.onload = () => { imgBefore.src = s.before; imgBefore.style.display = 'block'; phBefore.style.display = 'none'; };
-  b.onerror = () => { phBefore.style.display = 'flex'; };
-  b.src = s.before;
-
-  phAfterLabel.textContent = s.after;
-  imgAfter.style.display = 'none';
-  phAfter.style.display = 'flex';
-  const a = new Image();
-  a.onload = () => { imgAfter.src = s.after; imgAfter.style.display = 'block'; phAfter.style.display = 'none'; };
-  a.onerror = () => { phAfter.style.display = 'flex'; };
-  a.src = s.after;
-
-  applyRatio(ratio);
   updateThumbs();
   updateFsOverlay();
   btnPrev.disabled = idx === 0;
   btnNext.disabled = idx === scenes.length - 1;
+
+  // Preload both images, then swap instantly
+  const bImg = new Image();
+  const aImg = new Image();
+  let loaded = 0;
+  const onBothLoaded = () => {
+    phBefore.style.display = 'none';
+    phAfter.style.display = 'none';
+    imgBefore.src = s.before;
+    imgBefore.style.display = 'block';
+    imgAfter.src = s.after;
+    imgAfter.style.display = 'block';
+    applyRatio(ratio);
+  };
+  const onLoad = () => { if (++loaded === 2) onBothLoaded(); };
+  bImg.onload = onLoad;
+  bImg.onerror = onLoad;
+  aImg.onload = onLoad;
+  aImg.onerror = onLoad;
+  bImg.src = s.before;
+  aImg.src = s.after;
 }
 
 // build regular thumbnail strip
@@ -573,6 +576,14 @@ document.addEventListener('fullscreenchange', () => {
 window.addEventListener('resize', () => { updateFrameWidth(); applyRatio(ratio); });
 
 loadScene(0);
+
+// Preload all scene images in the background after initial load
+window.addEventListener('load', () => {
+  scenes.forEach(s => {
+    new Image().src = s.before;
+    new Image().src = s.after;
+  });
+});
 </script>
 </body>
 </html>
