@@ -446,7 +446,7 @@ const scenes = [
 ];
 
 let current = 0;
-let ratio = 0.5;
+let ratio = 0.10;
 let dragging = false;
 
 const frame       = document.getElementById('sliderFrame');
@@ -509,7 +509,7 @@ function loadScene(idx) {
   a.onerror = () => { phAfter.style.display = 'flex'; };
   a.src = s.after;
 
-  applyRatio(0.5);
+  applyRatio(0.10);
   updateThumbs();
   updateFsOverlay();
   btnPrev.disabled = idx === 0;
