@@ -491,7 +491,7 @@ function loadScene(idx) {
   a.onerror = () => { phAfter.style.display = 'flex'; };
   a.src = s.after;
 
-  applyRatio(0.10);
+  applyRatio(ratio);
   updateThumbs();
   updateFsOverlay();
   btnPrev.disabled = idx === 0;
@@ -516,6 +516,8 @@ scenes.forEach((s, i) => {
   const btn = document.createElement('button');
   btn.className = 'fs-scene-btn';
   btn.textContent = s.caption;
+  btn.addEventListener('mousedown', e => e.stopPropagation());
+  btn.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
   btn.addEventListener('click', () => loadScene(i));
   fsSceneList.appendChild(btn);
 });
