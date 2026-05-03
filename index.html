@@ -39,7 +39,7 @@
   header {
     width: 100%;
     text-align: center;
-    padding: 3rem 1.5rem 1.5rem;
+    padding: 3rem 1.5rem 1rem;
     background: linear-gradient(to bottom, #050402, transparent);
     position: relative;
   }
@@ -204,27 +204,18 @@
 
   /* CAPTION */
   .caption-bar {
-    width: min(900px, 100%);
-    padding: 1rem 1.2rem 0.4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-  }
-
-  .caption-rune { color: var(--ember-dim); font-size: 1rem; }
-
-  .caption-text {
-    font-family: 'Cinzel', serif;
-    font-size: 1.05rem;
-    letter-spacing: 0.12em;
-    color: var(--bone);
+    flex: 1;
+    text-align: center;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--bone-dim);
+    letter-spacing: 0.08em;
   }
 
   /* NAV */
   nav {
     width: min(900px, 100%);
-    padding: 1.2rem 1rem 2rem;
+    padding: 0.5rem 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -373,14 +364,7 @@
 
 <header>
   <h1 class="site-title">Ashlands <span>Reborn</span></h1>
-  <p class="site-subtitle">A Valheim biome transformation mod</p>
-  <div class="rune-line"></div>
 </header>
-
-<div class="label-strip">
-  <span class="label label-vanilla">Vanilla</span>
-  <span class="label label-reborn">Reborn</span>
-</div>
 
 <div class="slider-outer">
   <div class="slider-frame" id="sliderFrame">
@@ -424,10 +408,10 @@
   </div>
 </div>
 
-<div class="caption-bar">
-  <span class="caption-rune">⦿</span>
-  <span class="caption-text" id="captionText">Ancient Ruins</span>
-  <span class="caption-rune">⦿</span>
+<div class="label-strip">
+  <span class="label label-reborn">Reborn</span>
+  <p class="caption-bar">Drag the bar to restore the Ashlands</p>
+  <span class="label label-vanilla">Ashes</span>
 </div>
 
 <nav>
@@ -436,7 +420,7 @@
   <button class="nav-btn" id="btnNext">Next →</button>
 </nav>
 
-<footer>Drag the bar to compare Vanilla vs Reborn · Ashlands Reborn Mod</footer>
+<footer></footer>
 
 <script>
 const scenes = [
@@ -458,7 +442,6 @@ const phBefore    = document.getElementById('phBefore');
 const phAfter     = document.getElementById('phAfter');
 const phBeforeLabel = document.getElementById('phBeforeLabel');
 const phAfterLabel  = document.getElementById('phAfterLabel');
-const captionText = document.getElementById('captionText');
 const thumbStrip  = document.getElementById('thumbStrip');
 const btnPrev     = document.getElementById('btnPrev');
 const btnNext     = document.getElementById('btnNext');
@@ -490,7 +473,6 @@ function updateFsOverlay() {
 function loadScene(idx) {
   current = idx;
   const s = scenes[idx];
-  captionText.textContent = s.caption;
   updateFrameWidth();
 
   phBeforeLabel.textContent = s.before;
