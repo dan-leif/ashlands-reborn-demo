@@ -1,4 +1,4 @@
-# CLAUDE.md — ashlands-reborn-site
+# CLAUDE.md — ashlands-reborn-demo
 
 ## Project Overview
 
@@ -6,14 +6,14 @@ Static showcase website for the **Ashlands Reborn** Valheim mod. The mod visuall
 
 The site uses a before/after image slider so visitors can drag a vertical bar to compare vanilla Valheim vs. the mod. No framework, no build step — pure HTML/CSS/JS, hosted on GitHub Pages.
 
-- **Live URL:** https://dan-leif.github.io/ashlands-reborn-site/
-- **Repo:** https://github.com/dan-leif/ashlands-reborn-site
+- **Live URL:** https://dan-leif.github.io/ashlands-reborn-demo/
+- **Repo:** https://github.com/dan-leif/ashlands-reborn-demo
 - **GitHub account:** dan-leif
 
 ## Structure
 
 ```
-ashlands-reborn-site/
+ashlands-reborn-demo/
   index.html        # entire site — HTML, CSS, and JS in one file
   photos/           # before/after screenshot pairs
     ruins_1_a.jpg       # vanilla
