@@ -106,13 +106,19 @@
     position: relative;
     width: 100%;
     aspect-ratio: 16/9;
-    overflow: hidden;
     border-radius: 4px;
     border: 1px solid var(--divider);
     cursor: col-resize;
     user-select: none;
     touch-action: none;
     background: #111;
+  }
+
+  /* clip the image layers to the frame bounds */
+  .img-before,
+  .img-after-wrap,
+  .img-placeholder {
+    clip-path: inset(0);
   }
 
   .slider-frame img {
@@ -271,11 +277,95 @@
     text-align: center;
   }
 
+  /* FULLSCREEN BUTTON (inside frame) */
+  .fullscreen-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 20;
+    width: 32px; height: 32px;
+    padding: 0;
+    background: rgba(14,12,9,0.75);
+    border: 1px solid var(--ember-dim);
+    border-radius: 2px;
+    color: var(--bone-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+
+  .fullscreen-btn:hover { border-color: var(--ember); color: var(--ember); background: rgba(200,132,58,0.1); }
+  .fullscreen-btn svg { width: 16px; height: 16px; pointer-events: none; }
+
+  .slider-frame:fullscreen,
+  .slider-frame:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: unset;
+    border-radius: 0;
+    border: none;
+  }
+
+  /* FULLSCREEN SCENE PICKER — absolute inside the frame, only shown when fullscreen */
+  .fs-overlay {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.2rem 1.5rem 1.4rem;
+    background: linear-gradient(to top, rgba(5,4,2,0.95) 50%, transparent);
+    pointer-events: none;
+  }
+
+  :fullscreen .fs-overlay,
+  :-webkit-full-screen .fs-overlay { display: flex; }
+
+  .fs-overlay-caption {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    color: var(--bone);
+  }
+
+  .fs-scene-list {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    pointer-events: all;
+  }
+
+  .fs-scene-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.13em;
+    padding: 0.35rem 1rem;
+    background: rgba(14,12,9,0.85);
+    border: 1px solid var(--divider);
+    border-radius: 2px;
+    color: var(--bone-dim);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+
+  .fs-scene-btn:hover { border-color: var(--ember-dim); color: var(--ember); }
+  .fs-scene-btn.active { border-color: var(--ember); color: var(--ember); background: rgba(200,132,58,0.1); }
+
   @media (max-width: 600px) {
     .site-title { font-size: 2rem; }
     .thumb { width: 42px; height: 28px; }
     .drag-knob { width: 28px; height: 28px; }
     .drag-knob svg { width: 12px; height: 12px; }
+    .fullscreen-btn { width: 26px; height: 26px; }
+    .fullscreen-btn svg { width: 13px; height: 13px; }
   }
 </style>
 </head>
@@ -309,6 +399,19 @@
       </div>
       <img class="img-after" id="imgAfter" src="" alt="Reborn" style="display:none"/>
     </div>
+
+    <!-- fullscreen scene picker -->
+    <div class="fs-overlay" id="fsOverlay">
+      <span class="fs-overlay-caption" id="fsOverlayCaption"></span>
+      <div class="fs-scene-list" id="fsSceneList"></div>
+    </div>
+
+    <!-- fullscreen button -->
+    <button class="fullscreen-btn" id="btnFullscreen" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+      <svg id="fsIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M1 6V1h5M10 1h5v5M15 10v5h-5M6 15H1v-5"/>
+      </svg>
+    </button>
 
     <!-- drag handle -->
     <div class="drag-handle" id="dragHandle">
@@ -359,6 +462,9 @@ const captionText = document.getElementById('captionText');
 const thumbStrip  = document.getElementById('thumbStrip');
 const btnPrev     = document.getElementById('btnPrev');
 const btnNext     = document.getElementById('btnNext');
+const fsOverlay   = document.getElementById('fsOverlay');
+const fsOverlayCaption = document.getElementById('fsOverlayCaption');
+const fsSceneList = document.getElementById('fsSceneList');
 
 function updateFrameWidth() {
   const w = frame.offsetWidth;
@@ -372,6 +478,13 @@ function applyRatio(r) {
   const pct = (ratio * 100).toFixed(2) + '%';
   afterWrap.style.width = pct;
   dragHandle.style.left = pct;
+}
+
+function updateFsOverlay() {
+  fsOverlayCaption.textContent = scenes[current].caption;
+  fsSceneList.querySelectorAll('.fs-scene-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === current);
+  });
 }
 
 function loadScene(idx) {
@@ -398,10 +511,12 @@ function loadScene(idx) {
 
   applyRatio(0.5);
   updateThumbs();
+  updateFsOverlay();
   btnPrev.disabled = idx === 0;
   btnNext.disabled = idx === scenes.length - 1;
 }
 
+// build regular thumbnail strip
 scenes.forEach((s, i) => {
   const t = document.createElement('div');
   t.className = 'thumb';
@@ -412,6 +527,15 @@ scenes.forEach((s, i) => {
   t.appendChild(img);
   t.addEventListener('click', () => loadScene(i));
   thumbStrip.appendChild(t);
+});
+
+// build fullscreen scene buttons
+scenes.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'fs-scene-btn';
+  btn.textContent = s.caption;
+  btn.addEventListener('click', () => loadScene(i));
+  fsSceneList.appendChild(btn);
 });
 
 function updateThumbs() {
@@ -437,6 +561,30 @@ window.addEventListener('touchend', () => { dragging = false; });
 
 btnPrev.addEventListener('click', () => { if (current > 0) loadScene(current - 1); });
 btnNext.addEventListener('click', () => { if (current < scenes.length - 1) loadScene(current + 1); });
+
+const btnFullscreen = document.getElementById('btnFullscreen');
+const fsIcon        = document.getElementById('fsIcon');
+
+const ICON_EXPAND   = 'M1 6V1h5M10 1h5v5M15 10v5h-5M6 15H1v-5';
+const ICON_CONTRACT = 'M6 1v5H1M15 6h-5V1M10 15v-5h5M1 10h5v5';
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    (frame.requestFullscreen || frame.webkitRequestFullscreen).call(frame);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+}
+
+btnFullscreen.addEventListener('click', toggleFullscreen);
+
+document.addEventListener('fullscreenchange', () => {
+  const isFs = !!document.fullscreenElement;
+  fsIcon.querySelector('path').setAttribute('d', isFs ? ICON_CONTRACT : ICON_EXPAND);
+  updateFrameWidth();
+  applyRatio(ratio);
+  updateFsOverlay();
+});
 
 window.addEventListener('resize', () => { updateFrameWidth(); applyRatio(ratio); });
 
