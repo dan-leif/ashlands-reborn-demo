@@ -211,22 +211,6 @@
     flex-wrap: wrap;
   }
 
-  .nav-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    padding: 0.5rem 1.2rem;
-    background: transparent;
-    border: 1px solid var(--divider);
-    border-radius: 2px;
-    color: var(--bone-dim);
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
-  }
-
-  .nav-btn:hover { border-color: var(--ember-dim); color: var(--ember); background: rgba(200,132,58,0.06); }
-  .nav-btn:disabled { opacity: 0.3; cursor: default; background: transparent; border-color: var(--divider); color: var(--bone-dim); }
-
   .thumb-strip { display: flex; gap: 0.5rem; align-items: center; }
 
   .thumb {
@@ -401,9 +385,7 @@
 </div>
 
 <nav>
-  <button class="nav-btn" id="btnPrev">← Prev</button>
   <div class="thumb-strip" id="thumbStrip"></div>
-  <button class="nav-btn" id="btnNext">Next →</button>
 </nav>
 
 <footer></footer>
@@ -432,8 +414,6 @@ const phAfter     = document.getElementById('phAfter');
 const phBeforeLabel = document.getElementById('phBeforeLabel');
 const phAfterLabel  = document.getElementById('phAfterLabel');
 const thumbStrip  = document.getElementById('thumbStrip');
-const btnPrev     = document.getElementById('btnPrev');
-const btnNext     = document.getElementById('btnNext');
 const fsOverlay   = document.getElementById('fsOverlay');
 const fsOverlayCaption = document.getElementById('fsOverlayCaption');
 const fsSceneList = document.getElementById('fsSceneList');
@@ -465,9 +445,6 @@ function loadScene(idx) {
   updateFrameWidth();
   updateThumbs();
   updateFsOverlay();
-  btnPrev.disabled = idx === 0;
-  btnNext.disabled = idx === scenes.length - 1;
-
   // Preload both images, then swap instantly
   const bImg = new Image();
   const aImg = new Image();
@@ -535,8 +512,6 @@ window.addEventListener('touchmove', onMove, { passive: true });
 window.addEventListener('mouseup',  () => { dragging = false; });
 window.addEventListener('touchend', () => { dragging = false; });
 
-btnPrev.addEventListener('click', () => { if (current > 0) loadScene(current - 1); });
-btnNext.addEventListener('click', () => { if (current < scenes.length - 1) loadScene(current + 1); });
 
 const btnFullscreen = document.getElementById('btnFullscreen');
 const fsIcon        = document.getElementById('fsIcon');
