@@ -392,12 +392,12 @@
 
 <script>
 const scenes = [
-  { id: 'ruins_1',           caption: 'Ancient Ruins',              before: 'photos/ruins_1_a.jpg',           after: 'photos/ruins_1_b.jpg' },
-  { id: 'lava_river_1',      caption: 'Lava River',                 before: 'photos/lava_river_1_a.jpg',      after: 'photos/lava_river_1_b.jpg' },
-  { id: 'charred_warrior_1', caption: 'Charred Warrior',            before: 'photos/charred_warrior_1_a.jpg', after: 'photos/charred_warrior_1_b.jpg' },
-  { id: 'charred_warrior_3', caption: 'Charred Warrior (Close-up)', before: 'photos/charred_warrior_3_a.jpg', after: 'photos/charred_warrior_3_b.jpg' },
-  { id: 'valkyrie_1',        caption: 'Fallen Valkyrie',            before: 'photos/valkyrie_1_a.jpg',        after: 'photos/valkyrie_1_b.jpg' },
-  { id: 'valkyrie_3',        caption: 'Fallen Valkyrie (Close-up)', before: 'photos/valkyrie_3_a.jpg',        after: 'photos/valkyrie_3_b.jpg' },
+  { id: 'ruins_1',           caption: 'Ancient Ruins',              short: 'Ruins',      before: 'photos/ruins_1_a.jpg',           after: 'photos/ruins_1_b.jpg' },
+  { id: 'lava_river_1',      caption: 'Lava River',                 short: 'Lava',       before: 'photos/lava_river_1_a.jpg',      after: 'photos/lava_river_1_b.jpg' },
+  { id: 'charred_warrior_1', caption: 'Charred Warrior',            short: 'Warrior',    before: 'photos/charred_warrior_1_a.jpg', after: 'photos/charred_warrior_1_b.jpg' },
+  { id: 'charred_warrior_3', caption: 'Charred Warrior (Close-up)', short: 'Warrior 2',  before: 'photos/charred_warrior_3_a.jpg', after: 'photos/charred_warrior_3_b.jpg' },
+  { id: 'valkyrie_1',        caption: 'Fallen Valkyrie',            short: 'Valkyrie',   before: 'photos/valkyrie_1_a.jpg',        after: 'photos/valkyrie_1_b.jpg' },
+  { id: 'valkyrie_3',        caption: 'Fallen Valkyrie (Close-up)', short: 'Valkyrie 2', before: 'photos/valkyrie_3_a.jpg',        after: 'photos/valkyrie_3_b.jpg' },
 ];
 
 let current = 0;
@@ -484,7 +484,7 @@ scenes.forEach((s, i) => {
 scenes.forEach((s, i) => {
   const btn = document.createElement('button');
   btn.className = 'fs-scene-btn';
-  btn.textContent = s.caption;
+  btn.textContent = s.short;
   btn.addEventListener('mousedown', e => e.stopPropagation());
   btn.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
   btn.addEventListener('click', () => loadScene(i));
