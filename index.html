@@ -290,12 +290,7 @@
   :fullscreen .fs-overlay,
   :-webkit-full-screen .fs-overlay { display: flex; }
 
-  .fs-overlay-caption {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    letter-spacing: 0.14em;
-    color: var(--bone);
-  }
+
 
   .fs-scene-list {
     display: flex;
@@ -358,7 +353,6 @@
 
     <!-- fullscreen scene picker -->
     <div class="fs-overlay" id="fsOverlay">
-      <span class="fs-overlay-caption" id="fsOverlayCaption"></span>
       <div class="fs-scene-list" id="fsSceneList"></div>
     </div>
 
@@ -413,7 +407,6 @@ const phBeforeLabel = document.getElementById('phBeforeLabel');
 const phAfterLabel  = document.getElementById('phAfterLabel');
 const thumbStrip  = document.getElementById('thumbStrip');
 const fsOverlay   = document.getElementById('fsOverlay');
-const fsOverlayCaption = document.getElementById('fsOverlayCaption');
 const fsSceneList = document.getElementById('fsSceneList');
 
 function updateFrameWidth() {
@@ -431,7 +424,6 @@ function applyRatio(r) {
 }
 
 function updateFsOverlay() {
-  fsOverlayCaption.textContent = scenes[current].caption;
   fsSceneList.querySelectorAll('.fs-scene-btn').forEach((btn, i) => {
     btn.classList.toggle('active', i === current);
   });
