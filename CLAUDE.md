@@ -22,10 +22,6 @@ ashlands-reborn-demo/
     lava_river_1_b.jpg         # reborn
     charred_warrior_1_a.jpg    # vanilla
     charred_warrior_1_b.jpg    # reborn
-    charred_warrior_3_a.jpg    # vanilla
-    charred_warrior_3_b.jpg    # reborn
-    valkyrie_1_a.jpg           # vanilla
-    valkyrie_1_b.jpg           # reborn
     valkyrie_3_a.jpg           # vanilla
     valkyrie_3_b.jpg           # reborn
   .gitignore
@@ -47,9 +43,7 @@ const scenes = [
   { id: 'ruins_1',           caption: 'Ancient Ruins',              before: 'photos/ruins_1_a.jpg',           after: 'photos/ruins_1_b.jpg' },
   { id: 'lava_river_1',      caption: 'Lava River',                 before: 'photos/lava_river_1_a.jpg',      after: 'photos/lava_river_1_b.jpg' },
   { id: 'charred_warrior_1', caption: 'Charred Warrior',            before: 'photos/charred_warrior_1_a.jpg', after: 'photos/charred_warrior_1_b.jpg' },
-  { id: 'charred_warrior_3', caption: 'Charred Warrior (Close-up)', before: 'photos/charred_warrior_3_a.jpg', after: 'photos/charred_warrior_3_b.jpg' },
-  { id: 'valkyrie_1',        caption: 'Fallen Valkyrie',            before: 'photos/valkyrie_1_a.jpg',        after: 'photos/valkyrie_1_b.jpg' },
-  { id: 'valkyrie_3',        caption: 'Fallen Valkyrie (Close-up)', before: 'photos/valkyrie_3_a.jpg',        after: 'photos/valkyrie_3_b.jpg' },
+  { id: 'valkyrie_3',        caption: 'Fallen Valkyrie',            before: 'photos/valkyrie_3_a.jpg',        after: 'photos/valkyrie_3_b.jpg' },
 ];
 ```
 
